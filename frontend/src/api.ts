@@ -39,7 +39,8 @@ export interface LedgerDetail {
 export interface PlanningItem {
   id: number;
   name: string;
-  amount: number;
+  amount_min: number;
+  amount_max: number;
   type: 'emergency' | 'clothing' | 'electronics' | 'food' | 'coffee' | 'self_care' | 'fund' | 'taxi' | 'digital' | 'unknown';
   description?: string | null;
 }

@@ -139,9 +139,16 @@ class Statement {
     }
 
     if (sqlLower.includes('insert into planning')) {
-      const [name, amount, type, description] = params;
+      const [name, amount_min, amount_max, type, description] = params;
       const newId = data.planning.length > 0 ? Math.max(...data.planning.map(p => p.id)) + 1 : 1;
-      data.planning.push({ id: newId, name, amount: Number(amount), type, description });
+      data.planning.push({
+        id: newId,
+        name,
+        amount_min: Number(amount_min),
+        amount_max: Number(amount_max),
+        type,
+        description
+      });
       saveData(data);
       return { lastInsertRowid: newId, changes: 1 };
     }
@@ -157,11 +164,12 @@ class Statement {
     }
 
     if (sqlLower.includes('update planning')) {
-      const [name, amount, type, description, id] = params;
+      const [name, amount_min, amount_max, type, description, id] = params;
       const row = data.planning.find(p => p.id === id);
       if (row) {
         row.name = name;
-        row.amount = Number(amount);
+        row.amount_min = Number(amount_min);
+        row.amount_max = Number(amount_max);
         row.type = type;
         row.description = description;
       }

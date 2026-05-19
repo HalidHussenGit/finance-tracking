@@ -19,7 +19,8 @@ export default function PlanningPage() {
 
   // Form State
   const [name, setName] = useState('');
-  const [amount, setAmount] = useState('');
+  const [amountMin, setAmountMin] = useState('');
+  const [amountMax, setAmountMax] = useState('');
   const [type, setType] = useState<PlanningItem['type']>('food');
   const [description, setDescription] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
@@ -47,7 +48,8 @@ export default function PlanningPage() {
   const handleOpenAdd = () => {
     setEditingId(null);
     setName('');
-    setAmount('');
+    setAmountMin('');
+    setAmountMax('');
     setType('food');
     setDescription('');
     setFormError(null);
@@ -58,7 +60,8 @@ export default function PlanningPage() {
   const handleOpenEdit = (item: PlanningItem) => {
     setEditingId(item.id);
     setName(item.name);
-    setAmount(item.amount.toString());
+    setAmountMin(item.amount_min.toString());
+    setAmountMax(item.amount_max.toString());
     setType(item.type);
     setDescription(item.description || '');
     setFormError(null);
@@ -71,11 +74,14 @@ export default function PlanningPage() {
     setFormError(null);
 
     if (!name.trim()) return setFormError('Name is required');
-    if (!amount || Number(amount) <= 0) return setFormError('Amount must be positive');
+    if (!amountMin || Number(amountMin) <= 0) return setFormError('Minimum amount must be positive');
+    if (!amountMax || Number(amountMax) <= 0) return setFormError('Maximum amount must be positive');
+    if (Number(amountMax) < Number(amountMin)) return setFormError('Maximum amount cannot be less than minimum amount');
 
     const itemPayload = {
       name,
-      amount: Number(amount),
+      amount_min: Number(amountMin),
+      amount_max: Number(amountMax),
       type,
       description: description.trim() || undefined
     };
@@ -118,7 +124,7 @@ export default function PlanningPage() {
   const filterColumns: FilterColumn[] = [
     { id: 'name', label: 'Name', type: 'text' },
     { id: 'type', label: 'Type', type: 'categorical', options: BUDGET_TYPES },
-    { id: 'amount', label: 'Budget Amount', type: 'numeric' },
+    { id: 'amount', label: 'Target Range', type: 'numeric' },
   ];
 
   return (
@@ -159,7 +165,7 @@ export default function PlanningPage() {
               <thead>
                 <tr className="border-b border-border text-muted font-semibold text-xs">
                   <th className="pb-3 font-semibold">Name</th>
-                  <th className="pb-3 font-semibold text-right">Budget Amount</th>
+                  <th className="pb-3 font-semibold text-right">Target Range</th>
                   <th className="pb-3 font-semibold">Type</th>
                   <th className="pb-3 font-semibold">Description</th>
                   <th className="pb-3 font-semibold text-right">Actions</th>
@@ -169,8 +175,8 @@ export default function PlanningPage() {
                 {budgets.map(item => (
                   <tr key={item.id} className="hover:bg-neutral-50/50 transition">
                     <td className="py-3.5 font-medium text-neutral-800">{item.name}</td>
-                    <td className="py-3.5 text-right font-bold text-neutral-700">
-                      {item.amount.toLocaleString()} ETB
+                    <td className="py-3.5 text-right font-bold text-neutral-700 font-mono">
+                      {item.amount_min.toLocaleString()} – {item.amount_max.toLocaleString()} ETB
                     </td>
                     <td className="py-3.5 capitalize">
                       <span className="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-neutral-100 text-neutral-700">
@@ -238,15 +244,27 @@ export default function PlanningPage() {
                 />
               </div>
 
-              <div>
-                <label className="text-xs font-bold text-muted uppercase tracking-wider block mb-1">Target Amount (ETB)</label>
-                <input 
-                  type="number" 
-                  placeholder="e.g. 5000" 
-                  value={amount} 
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="w-full text-sm px-3 py-2 bg-neutral-50 border border-border rounded-lg focus:outline-none focus:border-accent font-semibold"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-muted uppercase tracking-wider block mb-1">Min Target (ETB)</label>
+                  <input 
+                    type="number" 
+                    placeholder="Min" 
+                    value={amountMin} 
+                    onChange={(e) => setAmountMin(e.target.value)}
+                    className="w-full text-sm px-3 py-2 bg-neutral-50 border border-border rounded-lg focus:outline-none focus:border-accent font-semibold"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-muted uppercase tracking-wider block mb-1">Max Target (ETB)</label>
+                  <input 
+                    type="number" 
+                    placeholder="Max" 
+                    value={amountMax} 
+                    onChange={(e) => setAmountMax(e.target.value)}
+                    className="w-full text-sm px-3 py-2 bg-neutral-50 border border-border rounded-lg focus:outline-none focus:border-accent font-semibold"
+                  />
+                </div>
               </div>
 
               <div>

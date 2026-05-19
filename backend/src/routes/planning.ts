@@ -24,12 +24,12 @@ router.get('/', (req: Request, res: Response) => {
     }
 
     if (amount_min !== undefined && amount_min !== '') {
-      query += ' AND amount >= ?';
+      query += ' AND amount_min >= ?';
       params.push(Number(amount_min));
     }
 
     if (amount_max !== undefined && amount_max !== '') {
-      query += ' AND amount <= ?';
+      query += ' AND amount_max <= ?';
       params.push(Number(amount_max));
     }
 
@@ -49,10 +49,10 @@ router.get('/', (req: Request, res: Response) => {
 
 // POST /api/planning - Add new budget item
 router.post('/', (req: Request, res: Response) => {
-  const { name, amount, type, description } = req.body;
+  const { name, amount_min, amount_max, type, description } = req.body;
 
-  if (!name || amount === undefined || !type) {
-    return res.status(400).json({ error: 'Name, amount, and type are required' });
+  if (!name || amount_min === undefined || amount_max === undefined || !type) {
+    return res.status(400).json({ error: 'Name, amount_min, amount_max, and type are required' });
   }
 
   if (!PLANNING_TYPES.includes(type)) {
@@ -61,10 +61,10 @@ router.post('/', (req: Request, res: Response) => {
 
   try {
     const insertStmt = db.prepare(`
-      INSERT INTO planning (name, amount, type, description)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO planning (name, amount_min, amount_max, type, description)
+      VALUES (?, ?, ?, ?, ?)
     `);
-    const result = insertStmt.run(name, Number(amount), type, description || null) as any;
+    const result = insertStmt.run(name, Number(amount_min), Number(amount_max), type, description || null) as any;
     const row = db.prepare('SELECT * FROM planning WHERE id = ?').get(Number(result.lastInsertRowid));
     res.status(210).json(row);
   } catch (error: any) {
@@ -75,10 +75,10 @@ router.post('/', (req: Request, res: Response) => {
 // PUT /api/planning/:id - Update budget item
 router.put('/:id', (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const { name, amount, type, description } = req.body;
+  const { name, amount_min, amount_max, type, description } = req.body;
 
-  if (!name || amount === undefined || !type) {
-    return res.status(400).json({ error: 'Name, amount, and type are required' });
+  if (!name || amount_min === undefined || amount_max === undefined || !type) {
+    return res.status(400).json({ error: 'Name, amount_min, amount_max, and type are required' });
   }
 
   if (!PLANNING_TYPES.includes(type)) {
@@ -88,10 +88,10 @@ router.put('/:id', (req: Request, res: Response) => {
   try {
     const updateStmt = db.prepare(`
       UPDATE planning
-      SET name = ?, amount = ?, type = ?, description = ?
+      SET name = ?, amount_min = ?, amount_max = ?, type = ?, description = ?
       WHERE id = ?
     `);
-    const result = updateStmt.run(name, Number(amount), type, description || null, id);
+    const result = updateStmt.run(name, Number(amount_min), Number(amount_max), type, description || null, id);
     
     if (result.changes === 0) {
       return res.status(404).json({ error: 'Planning item not found' });
