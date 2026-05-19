@@ -9,15 +9,15 @@ interface LedgerPageProps {
   setHighlightId: (id: number | null) => void;
 }
 
-export default function LedgerPage({ 
-  onViewLedgerDetail, 
-  highlightId, 
-  setHighlightId 
+export default function LedgerPage({
+  onViewLedgerDetail,
+  highlightId,
+  setHighlightId
 }: LedgerPageProps) {
   const [ledger, setLedger] = useState<LedgerRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<Record<string, string | number>>({});
-  
+
   // Custom date range states
   const [dateMin, setDateMin] = useState('');
   const [dateMax, setDateMax] = useState('');
@@ -27,7 +27,7 @@ export default function LedgerPage({
   // Fetch Ledger
   const fetchLedger = () => {
     setLoading(true);
-    
+
     // Combine standard filters with date range inputs
     const combinedFilters = { ...filters };
     if (dateMin) combinedFilters.date_min = `${dateMin}T00:00:00Z`;
@@ -74,7 +74,7 @@ export default function LedgerPage({
   const filterColumns: FilterColumn[] = [
     { id: 'name', label: 'Name', type: 'text' },
     { id: 'entry_type', label: 'Entry Type', type: 'categorical', options: ['income', 'expense'] },
-    { id: 'type', label: 'Category', type: 'categorical', options: ['work', 'family', 'lending', 'food', 'clothing', 'coffee', 'gift', 'emergency', 'electronics', 'self_care', 'fund', 'taxi', 'digital', 'others', 'other'] },
+    { id: 'type', label: 'Category', type: 'categorical', options: ['work', 'family', 'emergency', 'clothing', 'electronics', 'food', 'coffee', 'self_care', 'fund', 'taxi', 'digital', 'lending', 'others', 'unknown'] },
     { id: 'amount', label: 'Amount', type: 'numeric' },
   ];
 
@@ -86,7 +86,7 @@ export default function LedgerPage({
 
   return (
     <div className="flex flex-col gap-6">
-      
+
       {/* Page Header */}
       <div>
         <h2 className="text-lg font-bold tracking-tight text-neutral-800">Unified Ledger</h2>
@@ -105,14 +105,14 @@ export default function LedgerPage({
             )}
           </FilterBar>
         </div>
-        
+
         {/* Date Range Selector */}
         <div className="flex items-center gap-2 text-xs bg-white border border-border rounded-xl p-3 shadow-premium my-4 shrink-0">
           <Calendar className="w-4 h-4 text-muted" />
           <div className="flex items-center gap-1.5">
             <span className="font-semibold text-muted">From:</span>
-            <input 
-              type="date" 
+            <input
+              type="date"
               value={dateMin}
               onChange={(e) => setDateMin(e.target.value)}
               className="bg-neutral-50 border border-border rounded px-2 py-1 focus:outline-none focus:border-accent"
@@ -120,15 +120,15 @@ export default function LedgerPage({
           </div>
           <div className="flex items-center gap-1.5">
             <span className="font-semibold text-muted">To:</span>
-            <input 
-              type="date" 
+            <input
+              type="date"
               value={dateMax}
               onChange={(e) => setDateMax(e.target.value)}
               className="bg-neutral-50 border border-border rounded px-2 py-1 focus:outline-none focus:border-accent"
             />
           </div>
           {(dateMin || dateMax) && (
-            <button 
+            <button
               onClick={() => { setDateMin(''); setDateMax(''); }}
               className="text-red-500 font-bold hover:text-red-600 ml-1 transition cursor-pointer"
             >
@@ -167,16 +167,15 @@ export default function LedgerPage({
                   const isHighlighted = row.id === highlightId;
 
                   return (
-                    <tr 
-                      key={row.id} 
+                    <tr
+                      key={row.id}
                       ref={el => rowRefs.current[row.id] = el}
-                      className={`transition-all duration-500 ${
-                        isHighlighted 
-                          ? 'bg-blue-50 border-y border-blue-200 animate-pulse' 
-                          : isIncome 
-                            ? 'hover:bg-green-50/20' 
+                      className={`transition-all duration-500 ${isHighlighted
+                          ? 'bg-blue-50 border-y border-blue-200 animate-pulse'
+                          : isIncome
+                            ? 'hover:bg-green-50/20'
                             : 'hover:bg-red-50/20'
-                      }`}
+                        }`}
                     >
                       {/* Name - Clickable */}
                       <td className="py-3.5 font-semibold text-neutral-800">
@@ -195,11 +194,10 @@ export default function LedgerPage({
 
                       {/* Entry Type Badge */}
                       <td className="py-3.5">
-                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs font-semibold uppercase tracking-wider ${
-                          isIncome 
-                            ? 'bg-green-50 text-green-700 border border-green-100' 
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs font-semibold uppercase tracking-wider ${isIncome
+                            ? 'bg-green-50 text-green-700 border border-green-100'
                             : 'bg-red-50 text-red-700 border border-red-100'
-                        }`}>
+                          }`}>
                           {isIncome ? (
                             <ArrowUpRight className="w-3 h-3 text-green-700" />
                           ) : (
@@ -210,9 +208,8 @@ export default function LedgerPage({
                       </td>
 
                       {/* Transaction Amount */}
-                      <td className={`py-3.5 text-right font-bold ${
-                        isIncome ? 'text-green-600' : 'text-neutral-700'
-                      }`}>
+                      <td className={`py-3.5 text-right font-bold ${isIncome ? 'text-green-600' : 'text-neutral-700'
+                        }`}>
                         {isIncome ? '+' : '-'}{row.amount.toLocaleString()} ETB
                       </td>
 
