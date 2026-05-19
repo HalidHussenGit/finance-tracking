@@ -170,7 +170,7 @@ export default function PlanningPage() {
               <thead>
                 <tr className="border-b border-border text-muted font-semibold text-xs">
                   <th className="pb-3 font-semibold">Name</th>
-                  <th className="pb-3 font-semibold text-right">Target Range</th>
+                  <th className="pb-3 font-semibold">Target Range</th>
                   <th className="pb-3 font-semibold">Type</th>
                   <th className="pb-3 font-semibold">Priority</th>
                   <th className="pb-3 font-semibold">Description</th>
@@ -181,7 +181,7 @@ export default function PlanningPage() {
                 {budgets.map(item => (
                   <tr key={item.id} className="hover:bg-neutral-50/50 transition">
                     <td className="py-3.5 font-medium text-neutral-800">{item.name}</td>
-                    <td className="py-3.5 text-right font-bold text-neutral-700 font-mono">
+                    <td className="py-3.5 font-bold text-neutral-700 font-mono">
                       {item.amount_min.toLocaleString()} – {item.amount_max.toLocaleString()} ETB
                     </td>
                     <td className="py-3.5 capitalize">
