@@ -137,7 +137,7 @@ export default function ExpensesPage({ onHighlightLedgerRow, onRefreshTrigger }:
               <thead>
                 <tr className="border-b border-border text-muted font-semibold text-xs">
                   <th className="pb-3 font-semibold">Name</th>
-                  <th className="pb-3 font-semibold text-right">Amount</th>
+                  <th className="pb-3 font-semibold">Amount</th>
                   <th className="pb-3 font-semibold">Planned</th>
                   <th className="pb-3 font-semibold">Type</th>
                   <th className="pb-3 font-semibold">Description</th>
@@ -158,7 +158,7 @@ export default function ExpensesPage({ onHighlightLedgerRow, onRefreshTrigger }:
                         <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-accent transition-all transform translate-x-[-4px] group-hover:translate-x-0" />
                       </div>
                     </td>
-                    <td className="py-3.5 text-right font-bold text-neutral-700">
+                    <td className="py-3.5 font-bold text-neutral-700">
                       -{exp.amount.toLocaleString()} ETB
                     </td>
                     <td className="py-3.5">
