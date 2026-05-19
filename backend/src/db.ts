@@ -77,7 +77,7 @@ function parseAndFilter(sql: string, params: any[], items: any[]): any[] {
         return Number(itemVal) <= Number(val);
       });
     } 
-    else if (clause.includes('like ?')) {
+    else if (clause.toLowerCase().includes('like ?')) {
       const field = getField(clause);
       const searchTerm = params[paramIdx++].toString().replace(/%/g, '').toLowerCase();
       filteredItems = filteredItems.filter(item => item[field]?.toString().toLowerCase().includes(searchTerm));
