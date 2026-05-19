@@ -17,7 +17,7 @@ export default function IncomePage({ onHighlightLedgerRow, onRefreshTrigger }: I
   // New Income Form State
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
-  const [type, setType] = useState<'family' | 'work'>('work');
+  const [type, setType] = useState<'family' | 'work' | 'loan'>('work');
   const [source, setSource] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -43,7 +43,7 @@ export default function IncomePage({ onHighlightLedgerRow, onRefreshTrigger }: I
   // Define Filter Columns
   const filterColumns: FilterColumn[] = [
     { id: 'name', label: 'Name', type: 'text' },
-    { id: 'type', label: 'Type', type: 'categorical', options: ['family', 'work'] },
+    { id: 'type', label: 'Type', type: 'categorical', options: ['family', 'work', 'loan'] },
     { id: 'amount', label: 'Amount', type: 'numeric' },
   ];
 
@@ -153,7 +153,11 @@ export default function IncomePage({ onHighlightLedgerRow, onRefreshTrigger }: I
                     </td>
                     <td className="py-3.5 capitalize">
                       <span className={`inline-flex px-2 py-0.5 rounded text-xs font-semibold ${
-                        inc.type === 'work' ? 'bg-indigo-50 text-indigo-700' : 'bg-pink-50 text-pink-700'
+                        inc.type === 'work' 
+                          ? 'bg-indigo-50 text-indigo-700' 
+                          : inc.type === 'loan'
+                            ? 'bg-amber-50 text-amber-700'
+                            : 'bg-pink-50 text-pink-700'
                       }`}>
                         {inc.type}
                       </span>
@@ -225,6 +229,7 @@ export default function IncomePage({ onHighlightLedgerRow, onRefreshTrigger }: I
                 >
                   <option value="work">Work (Salary, Consulting)</option>
                   <option value="family">Family (Gift, Share, Support)</option>
+                  <option value="loan">Loan (Borrowed Money)</option>
                 </select>
               </div>
 

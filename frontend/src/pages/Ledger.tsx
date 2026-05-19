@@ -74,7 +74,7 @@ export default function LedgerPage({
   const filterColumns: FilterColumn[] = [
     { id: 'name', label: 'Name', type: 'text' },
     { id: 'entry_type', label: 'Entry Type', type: 'categorical', options: ['income', 'expense'] },
-    { id: 'type', label: 'Category', type: 'categorical', options: ['work', 'food', 'clothing', 'coffee', 'gift', 'emergency', 'electronics', 'self_care', 'fund', 'taxi', 'digital', 'other'] },
+    { id: 'type', label: 'Category', type: 'categorical', options: ['work', 'family', 'loan', 'lending', 'food', 'clothing', 'coffee', 'gift', 'emergency', 'electronics', 'self_care', 'fund', 'taxi', 'digital', 'other'] },
     { id: 'amount', label: 'Amount', type: 'numeric' },
   ];
 

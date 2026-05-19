@@ -10,7 +10,7 @@ interface ExpensesPageProps {
 
 const EXPENSE_TYPES = [
   'emergency', 'clothing', 'electronics', 'food', 'coffee', 
-  'self_care', 'fund', 'taxi', 'digital', 'unknown'
+  'self_care', 'fund', 'taxi', 'digital', 'lending', 'unknown'
 ];
 
 export default function ExpensesPage({ onHighlightLedgerRow, onRefreshTrigger }: ExpensesPageProps) {

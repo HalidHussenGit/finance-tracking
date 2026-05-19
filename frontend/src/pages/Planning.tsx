@@ -5,7 +5,7 @@ import { Plus, X, Trash2, Edit3 } from 'lucide-react';
 
 const BUDGET_TYPES = [
   'emergency', 'clothing', 'electronics', 'food', 'coffee', 
-  'self_care', 'fund', 'taxi', 'digital', 'unknown'
+  'self_care', 'fund', 'taxi', 'digital', 'lending', 'unknown'
 ];
 
 export default function PlanningPage() {

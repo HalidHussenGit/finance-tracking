@@ -2,7 +2,7 @@ export interface Income {
   id: number;
   name: string;
   amount: number;
-  type: 'family' | 'work';
+  type: 'family' | 'work' | 'loan';
   source?: string | null;
 }
 
@@ -11,7 +11,7 @@ export interface Expense {
   name: string;
   amount: number;
   planned: number | boolean;
-  type: 'emergency' | 'clothing' | 'electronics' | 'food' | 'coffee' | 'self_care' | 'fund' | 'taxi' | 'digital' | 'unknown';
+  type: 'emergency' | 'clothing' | 'electronics' | 'food' | 'coffee' | 'self_care' | 'fund' | 'taxi' | 'digital' | 'lending' | 'unknown';
   description?: string | null;
 }
 
@@ -41,7 +41,7 @@ export interface PlanningItem {
   name: string;
   amount_min: number;
   amount_max: number;
-  type: 'emergency' | 'clothing' | 'electronics' | 'food' | 'coffee' | 'self_care' | 'fund' | 'taxi' | 'digital' | 'unknown';
+  type: 'emergency' | 'clothing' | 'electronics' | 'food' | 'coffee' | 'self_care' | 'fund' | 'taxi' | 'digital' | 'lending' | 'unknown';
   description?: string | null;
 }
 

@@ -6,7 +6,7 @@ const router = Router();
 
 const EXPENSE_TYPES = [
   'emergency', 'clothing', 'electronics', 'food', 'coffee', 
-  'self_care', 'fund', 'taxi', 'digital', 'unknown'
+  'self_care', 'fund', 'taxi', 'digital', 'lending', 'unknown'
 ];
 
 // POST /api/expense - Add expense entry + ledger row
