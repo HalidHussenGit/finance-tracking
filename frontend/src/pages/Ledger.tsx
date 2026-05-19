@@ -78,6 +78,10 @@ export default function LedgerPage({
     { id: 'amount', label: 'Amount', type: 'numeric' },
   ];
 
+  const totalWasted = ledger
+    .filter(row => row.entry_type === 'expense')
+    .reduce((sum, row) => sum + row.amount, 0);
+
   return (
     <div className="flex flex-col gap-6">
       
@@ -90,7 +94,14 @@ export default function LedgerPage({
       {/* Filter and Date-Range Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="flex-1">
-          <FilterBar columns={filterColumns} onFilterChange={setFilters} />
+          <FilterBar columns={filterColumns} onFilterChange={setFilters}>
+            {totalWasted > 0 && (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-red-700 border border-red-100 rounded-lg text-xs font-bold shadow-sm transition animate-pulse shrink-0">
+                <span className="uppercase tracking-wider">Total Wasted:</span>
+                <span className="font-mono text-sm">{totalWasted.toLocaleString()} ETB</span>
+              </div>
+            )}
+          </FilterBar>
         </div>
         
         {/* Date Range Selector */}

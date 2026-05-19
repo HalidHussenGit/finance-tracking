@@ -11,6 +11,7 @@ export interface FilterColumn {
 interface FilterBarProps {
   columns: FilterColumn[];
   onFilterChange: (filters: Record<string, string | number>) => void;
+  children?: React.ReactNode;
 }
 
 interface ActiveFilter {
@@ -27,7 +28,7 @@ interface ActiveFilter {
   };
 }
 
-export default function FilterBar({ columns, onFilterChange }: FilterBarProps) {
+export default function FilterBar({ columns, onFilterChange, children }: FilterBarProps) {
   const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
   const [showAddMenu, setShowAddMenu] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -299,6 +300,8 @@ export default function FilterBar({ columns, onFilterChange }: FilterBarProps) {
               <span>Clear filters</span>
             </button>
           )}
+
+          {children}
         </div>
       </div>
     </div>
