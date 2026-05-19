@@ -2,7 +2,7 @@ export interface Income {
   id: number;
   name: string;
   amount: number;
-  type: 'family' | 'work' | 'loan';
+  type: 'family' | 'work';
   source?: string | null;
 }
 
@@ -43,6 +43,7 @@ export interface PlanningItem {
   amount_max: number;
   type: 'emergency' | 'clothing' | 'electronics' | 'food' | 'coffee' | 'self_care' | 'fund' | 'taxi' | 'digital' | 'lending' | 'unknown';
   description?: string | null;
+  priority: 'high' | 'medium' | 'low';
 }
 
 export interface SummaryPeriod {

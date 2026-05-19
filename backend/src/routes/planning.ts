@@ -11,7 +11,7 @@ const PLANNING_TYPES = [
 // GET /api/planning - List planning budgets
 router.get('/', (req: Request, res: Response) => {
   try {
-    const { type, name, amount_min, amount_max } = req.query;
+    const { type, name, amount_min, amount_max, priority } = req.query;
 
     let query = 'SELECT * FROM planning WHERE 1=1';
     const params: any[] = [];
@@ -21,6 +21,13 @@ router.get('/', (req: Request, res: Response) => {
       const placeholders = types.map(() => '?').join(',');
       query += ` AND type IN (${placeholders})`;
       params.push(...types);
+    }
+
+    if (priority) {
+      const priorities = (priority as string).split(',');
+      const placeholders = priorities.map(() => '?').join(',');
+      query += ` AND priority IN (${placeholders})`;
+      params.push(...priorities);
     }
 
     if (amount_min !== undefined && amount_min !== '') {
@@ -49,7 +56,7 @@ router.get('/', (req: Request, res: Response) => {
 
 // POST /api/planning - Add new budget item
 router.post('/', (req: Request, res: Response) => {
-  const { name, amount_min, amount_max, type, description } = req.body;
+  const { name, amount_min, amount_max, type, description, priority } = req.body;
 
   if (!name || amount_min === undefined || amount_max === undefined || !type) {
     return res.status(400).json({ error: 'Name, amount_min, amount_max, and type are required' });
@@ -59,12 +66,16 @@ router.post('/', (req: Request, res: Response) => {
     return res.status(400).json({ error: `Invalid type. Must be one of: ${PLANNING_TYPES.join(', ')}` });
   }
 
+  if (priority && priority !== 'high' && priority !== 'medium' && priority !== 'low') {
+    return res.status(400).json({ error: 'Invalid priority. Must be high, medium, or low' });
+  }
+
   try {
     const insertStmt = db.prepare(`
-      INSERT INTO planning (name, amount_min, amount_max, type, description)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO planning (name, amount_min, amount_max, type, description, priority)
+      VALUES (?, ?, ?, ?, ?, ?)
     `);
-    const result = insertStmt.run(name, Number(amount_min), Number(amount_max), type, description || null) as any;
+    const result = insertStmt.run(name, Number(amount_min), Number(amount_max), type, description || null, priority || 'medium') as any;
     const row = db.prepare('SELECT * FROM planning WHERE id = ?').get(Number(result.lastInsertRowid));
     res.status(210).json(row);
   } catch (error: any) {
@@ -75,7 +86,7 @@ router.post('/', (req: Request, res: Response) => {
 // PUT /api/planning/:id - Update budget item
 router.put('/:id', (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const { name, amount_min, amount_max, type, description } = req.body;
+  const { name, amount_min, amount_max, type, description, priority } = req.body;
 
   if (!name || amount_min === undefined || amount_max === undefined || !type) {
     return res.status(400).json({ error: 'Name, amount_min, amount_max, and type are required' });
@@ -85,13 +96,17 @@ router.put('/:id', (req: Request, res: Response) => {
     return res.status(400).json({ error: `Invalid type. Must be one of: ${PLANNING_TYPES.join(', ')}` });
   }
 
+  if (priority && priority !== 'high' && priority !== 'medium' && priority !== 'low') {
+    return res.status(400).json({ error: 'Invalid priority. Must be high, medium, or low' });
+  }
+
   try {
     const updateStmt = db.prepare(`
       UPDATE planning
-      SET name = ?, amount_min = ?, amount_max = ?, type = ?, description = ?
+      SET name = ?, amount_min = ?, amount_max = ?, type = ?, description = ?, priority = ?
       WHERE id = ?
     `);
-    const result = updateStmt.run(name, Number(amount_min), Number(amount_max), type, description || null, id);
+    const result = updateStmt.run(name, Number(amount_min), Number(amount_max), type, description || null, priority || 'medium', id);
     
     if (result.changes === 0) {
       return res.status(404).json({ error: 'Planning item not found' });

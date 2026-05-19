@@ -12,8 +12,8 @@ router.post('/', (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Name, amount, and type are required' });
   }
 
-  if (type !== 'family' && type !== 'work' && type !== 'loan') {
-    return res.status(400).json({ error: 'Invalid type. Must be either family, work or loan' });
+  if (type !== 'family' && type !== 'work') {
+    return res.status(400).json({ error: 'Invalid type. Must be either family or work' });
   }
 
   try {

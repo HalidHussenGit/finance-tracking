@@ -23,6 +23,7 @@ export default function PlanningPage() {
   const [amountMax, setAmountMax] = useState('');
   const [type, setType] = useState<PlanningItem['type']>('food');
   const [description, setDescription] = useState('');
+  const [priority, setPriority] = useState<'high' | 'medium' | 'low'>('medium');
   const [formError, setFormError] = useState<string | null>(null);
 
   // Fetch Budget list
@@ -52,6 +53,7 @@ export default function PlanningPage() {
     setAmountMax('');
     setType('food');
     setDescription('');
+    setPriority('medium');
     setFormError(null);
     setShowForm(true);
   };
@@ -64,6 +66,7 @@ export default function PlanningPage() {
     setAmountMax(item.amount_max.toString());
     setType(item.type);
     setDescription(item.description || '');
+    setPriority(item.priority || 'medium');
     setFormError(null);
     setShowForm(true);
   };
@@ -83,7 +86,8 @@ export default function PlanningPage() {
       amount_min: Number(amountMin),
       amount_max: Number(amountMax),
       type,
-      description: description.trim() || undefined
+      description: description.trim() || undefined,
+      priority
     };
 
     if (editingId) {
@@ -124,6 +128,7 @@ export default function PlanningPage() {
   const filterColumns: FilterColumn[] = [
     { id: 'name', label: 'Name', type: 'text' },
     { id: 'type', label: 'Type', type: 'categorical', options: BUDGET_TYPES },
+    { id: 'priority', label: 'Priority', type: 'categorical', options: ['high', 'medium', 'low'] },
     { id: 'amount', label: 'Target Range', type: 'numeric' },
   ];
 
@@ -167,6 +172,7 @@ export default function PlanningPage() {
                   <th className="pb-3 font-semibold">Name</th>
                   <th className="pb-3 font-semibold text-right">Target Range</th>
                   <th className="pb-3 font-semibold">Type</th>
+                  <th className="pb-3 font-semibold">Priority</th>
                   <th className="pb-3 font-semibold">Description</th>
                   <th className="pb-3 font-semibold text-right">Actions</th>
                 </tr>
@@ -181,6 +187,11 @@ export default function PlanningPage() {
                     <td className="py-3.5 capitalize">
                       <span className="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-neutral-100 text-neutral-700">
                         {item.type}
+                      </span>
+                    </td>
+                    <td className="py-3.5 capitalize">
+                      <span className="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-neutral-100 text-neutral-700">
+                        {item.priority || 'medium'}
                       </span>
                     </td>
                     <td className="py-3.5 text-neutral-500 text-xs max-w-[250px] truncate">
@@ -272,11 +283,24 @@ export default function PlanningPage() {
                 <select 
                   value={type} 
                   onChange={(e) => setType(e.target.value as any)}
-                  className="w-full text-sm px-3 py-2 bg-neutral-50 border border-border rounded-lg focus:outline-none focus:border-accent capitalize"
+                  className="w-full text-sm px-3 py-2 bg-neutral-50 border border-border rounded-lg focus:outline-none focus:border-accent capitalize font-medium"
                 >
                   {BUDGET_TYPES.map(t => (
                     <option key={t} value={t}>{t}</option>
                   ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-muted uppercase tracking-wider block mb-1">Priority</label>
+                <select 
+                  value={priority} 
+                  onChange={(e) => setPriority(e.target.value as any)}
+                  className="w-full text-sm px-3 py-2 bg-neutral-50 border border-border rounded-lg focus:outline-none focus:border-accent font-medium capitalize"
+                >
+                  <option value="high">🔴 High</option>
+                  <option value="medium">🟡 Medium</option>
+                  <option value="low">🟢 Low</option>
                 </select>
               </div>
 
